@@ -65,13 +65,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-hidden select-none">
-      {/* 0. Eagerly Pre-warmed 3D Airport Scene (Mounted underneath to prevent black screen) */}
-      {appMode === "flight" && (
-        <div className="fixed inset-0 z-0 pointer-events-auto">
-          <FirstFlightExperienceScene />
-        </div>
-      )}
-
       {/* 1. Cinematic Portal Transition Overlay (光效过渡，彻底消除黑屏闪烁) */}
       <AnimatePresence>
         {isTransitioning && (
@@ -137,97 +130,65 @@ export default function Home() {
         />
       )}
 
-      {/* Dynamic Animated Scene Transition (Cross-Fade + Soft Optical Blur) */}
-      {hasEnteredWelcome && (
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={appMode}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="relative w-full h-full min-h-screen"
-          >
-            {/* ================= 模式 1：第一次坐飞机 (Flagship MVP) ================= */}
-            {appMode === "flight" && (
-              <div className="relative w-full h-screen pointer-events-none">
-                {/* 3D Scene is in fixed background, Overlay is interactive */}
-                <div className="pointer-events-auto">
-                  <FirstFlightOverlay onSwitchToGuides={() => setAppMode("guides")} />
-                  <FlightReflectionCard onSwitchToGuides={() => setAppMode("guides")} />
-                </div>
-              </div>
+      {/* 4. Main Experience Viewport */}
+      <div className="relative w-full h-full min-h-screen">
+        {/* ================= 模式 1：第一次坐飞机 (Flagship MVP) ================= */}
+        {appMode === "flight" && (
+          <div className="relative w-full h-screen">
+            <FirstFlightExperienceScene />
+            {hasEnteredWelcome && (
+              <FirstFlightOverlay onSwitchToGuides={() => setAppMode("guides")} />
             )}
-
-            {/* ================= 模式 2：公共空间实景向导 (星巴克、三甲医院、机场) ================= */}
-            {appMode === "guides" && (
-              <div className="relative w-full min-h-screen">
-                <AnimatePresence mode="wait">
-                  {viewMode === "hall" ? (
-                    <motion.div
-                      key="guides-hall"
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.02 }}
-                      transition={{ duration: 0.35 }}
-                      className="relative w-full min-h-screen"
-                    >
-                      <Hero />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="guides-3d"
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.02 }}
-                      transition={{ duration: 0.35 }}
-                      className="relative w-full h-screen"
-                    >
-                      <SceneViewer3D />
-                      <GuideDrawer />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+            {hasEnteredWelcome && (
+              <FlightReflectionCard onSwitchToGuides={() => setAppMode("guides")} />
             )}
+          </div>
+        )}
 
-            {/* ================= 模式 3：雾中之门 (哲思空间) ================= */}
-            {appMode === "fog" && (
-              <div className="relative w-full h-screen">
-                <FoggyDoorScene />
-                <FoggyOverlay appMode={appMode} onModeChange={setAppMode} />
-                <CourageCard
-                  onStartFlight={() => setAppMode("flight")}
-                  onExploreGuides={() => setAppMode("guides")}
-                />
-              </div>
-            )}
+        {/* ================= 模式 2：公共空间实景向导 (星巴克、三甲医院、机场) ================= */}
+        {appMode === "guides" && (
+          <div className="relative w-full min-h-screen">
+            <AnimatePresence mode="wait">
+              {viewMode === "hall" ? (
+                <motion.div
+                  key="guides-hall"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.35 }}
+                  className="relative w-full min-h-screen"
+                >
+                  <Hero />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="guides-3d"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.35 }}
+                  className="relative w-full h-screen"
+                >
+                  <SceneViewer3D />
+                  <GuideDrawer />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
-            {/* ================= 模式 4：项目答辩演示 (PPT) ================= */}
-            {appMode === "deck" && (
-              <div className="relative w-full h-screen">
-                <iframe
-                  src="/presentation.html"
-                  className="w-full h-full border-none"
-                  title="FirstStep 项目答辩汇报 PPT"
-                />
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      )}
-
-      {/* Floating Bottom-Right PPT Launcher Pill (Always Available) */}
-      {hasEnteredWelcome && appMode !== "deck" && (
-        <button
-          onClick={() => setAppMode("deck")}
-          title="切换至项目汇报演示 (PPT)"
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/85 hover:bg-black text-amber-300 border border-amber-400/50 hover:border-amber-400 shadow-[0_4px_24px_rgba(245,158,11,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
-        >
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <span className="text-xs font-semibold tracking-wide">📽️ 项目答辩 (PPT)</span>
-        </button>
-      )}
+        {/* ================= 模式 3：雾中之门 (哲思空间) ================= */}
+        {appMode === "fog" && (
+          <div className="relative w-full h-screen">
+            <FoggyDoorScene />
+            <FoggyOverlay appMode={appMode} onModeChange={setAppMode} />
+            <CourageCard
+              onStartFlight={() => setAppMode("flight")}
+              onExploreGuides={() => setAppMode("guides")}
+            />
+          </div>
+        )}
+      </div>
     </main>
   );
 }
