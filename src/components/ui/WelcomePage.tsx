@@ -11,25 +11,20 @@ interface WelcomePageProps {
 
 export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
 
   const handleClick = () => {
     soundManager.playGlide();
-    setIsExiting(true);
-    setTimeout(() => {
-      onEnter();
-    }, 700);
+    onEnter();
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0, scale: 1.04, filter: "blur(12px)" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-0 z-50 flex flex-col justify-between items-center bg-[#05070c] text-white overflow-hidden select-none p-8 sm:p-14"
-      >
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 1.06, filter: "blur(14px)" }}
+      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-0 z-40 flex flex-col justify-between items-center bg-[#05070c]/95 backdrop-blur-xl text-white overflow-hidden select-none p-8 sm:p-14"
+    >
         {/* Subtle, Slow Breathing Ambient Light Aura in Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
@@ -47,7 +42,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,7,12,0.85)_80%)]" />
         </div>
 
-        {/* Top Brand & PPT Launch Bar */}
+        {/* Top Brand Bar */}
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,19 +57,9 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
               FIRST STEP · 第一次
             </span>
           </div>
-
-          {/* Prominent Glowing PPT Link */}
-          <a
-            href="/presentation.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="新标签页全屏放映项目汇报 PPT"
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 hover:border-amber-400/80 text-xs font-semibold text-amber-300 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 backdrop-blur-xl group"
-          >
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            <span>📽️ 项目演示文稿 (PPT)</span>
-            <ArrowRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition-transform" />
-          </a>
+          <span className="text-[11px] font-mono text-neutral-500/80 tracking-widest hidden sm:inline">
+            3D SPATIAL ACCLIMATIZATION
+          </span>
         </motion.div>
 
         {/* Center: Poetic, Pure Typography & Interactive "迈出第一步" */}
@@ -144,19 +129,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
                 <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300" />
               </button>
             </div>
-
-            {/* Prominent Secondary Action Button: 项目汇报 PPT */}
-            <a
-              href="/presentation.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-7 py-4 rounded-full bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 border border-amber-400/35 hover:border-amber-400/70 backdrop-blur-2xl text-amber-300 transition-all duration-300 shadow-[0_4px_24px_rgba(245,158,11,0.2)] flex items-center gap-2.5 cursor-pointer group"
-            >
-              <span className="text-sm sm:text-base font-light tracking-[0.12em]">
-                📽️ 答辩演示 (PPT)
-              </span>
-              <ArrowRight className="w-4 h-4 text-amber-300 group-hover:translate-x-1 transition-transform" />
-            </a>
           </motion.div>
         </div>
 
@@ -168,17 +140,9 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
           className="relative z-10 flex items-center justify-between w-full text-[11px] font-mono text-neutral-500/80 tracking-wider"
         >
           <span>SPATIAL COGNITIVE MATRIX</span>
-          <a
-            href="/presentation.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-sky-300 transition-colors flex items-center gap-1.5 cursor-pointer text-neutral-400 border border-white/10 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md"
-          >
-            <span>📽️ 项目演示文稿 (PPT)</span>
-          </a>
+          <span className="text-neutral-500/60 font-mono">EMBODIED DESENSITIZATION SANDBOX</span>
           <span className="hidden sm:inline">2026 EDITION</span>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
   );
 };

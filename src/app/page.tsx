@@ -48,25 +48,86 @@ const FoggyDoorScene = dynamic(
 export default function Home() {
   // General Welcome Page Landing State
   const [hasEnteredWelcome, setHasEnteredWelcome] = useState<boolean>(false);
+  // Cinematic Transition State to eliminate black screen
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
   // App experience mode: 'flight' | 'guides' | 'fog'
   const [appMode, setAppMode] = useState<AppExperienceMode>("flight");
   const { viewMode } = useAppStore();
 
+  const handleEnter = () => {
+    setIsTransitioning(true);
+    setHasEnteredWelcome(true);
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 1100);
+  };
+
   return (
     <main className="relative min-h-screen bg-black overflow-hidden select-none">
-      {/* 1. 总欢迎页 (Landing Page with "迈出第一步") */}
+      {/* 0. Eagerly Pre-warmed 3D Airport Scene (Mounted underneath to prevent black screen) */}
+      {appMode === "flight" && (
+        <div className="fixed inset-0 z-0 pointer-events-auto">
+          <FirstFlightExperienceScene />
+        </div>
+      )}
+
+      {/* 1. Cinematic Portal Transition Overlay (光效过渡，彻底消除黑屏闪烁) */}
       <AnimatePresence>
-        {!hasEnteredWelcome && (
-          <WelcomePage
-            onEnter={() => {
-              setHasEnteredWelcome(true);
-            }}
-          />
+        {isTransitioning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.65, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 pointer-events-none flex flex-col items-center justify-center overflow-hidden"
+          >
+            {/* Luminous Light Tunnel Radial Bloom */}
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0 }}
+              animate={{ scale: [0.7, 1.8, 2.5], opacity: [0, 0.4, 0] }}
+              transition={{ duration: 1.1, ease: "easeOut" }}
+              className="absolute w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.3)_0%,rgba(14,165,233,0.08)_50%,transparent_70%)] blur-3xl"
+            />
+            {/* Horizontal Light Ray */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: [0, 1.4, 1.8], opacity: [0, 0.75, 0] }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-sky-300 to-transparent shadow-[0_0_30px_rgba(56,189,248,0.9)]"
+            />
+            {/* Stage Waypoint Micro-toast */}
+            <motion.div
+              initial={{ opacity: 0, y: 15, scale: 0.96 }}
+              animate={{ opacity: [0, 1, 1, 0], y: [15, 0, 0, -8], scale: [0.96, 1, 1, 1.02] }}
+              transition={{ duration: 1.0, times: [0, 0.25, 0.75, 1], ease: "easeInOut" }}
+              className="relative z-10 flex flex-col items-center space-y-1.5 bg-slate-950/70 backdrop-blur-2xl border border-sky-400/25 px-8 py-4 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
+                <span className="text-[10px] font-mono tracking-[0.28em] text-sky-300 uppercase">
+                  SPATIAL ACCLIMATIZATION MATRIX
+                </span>
+              </div>
+              <div className="text-base font-medium tracking-widest text-white">
+                正在进入 · 民航航站楼具身实景
+              </div>
+              <div className="text-[11px] text-neutral-400 font-light tracking-wider">
+                建立肌肉记忆 · 重塑空间掌控感
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
-      {/* 2. Top Persistent Unified Navbar (Hidden on Welcome Page) */}
+      {/* 2. 总欢迎页 (Landing Page with "迈出第一步") */}
+      <AnimatePresence>
+        {!hasEnteredWelcome && (
+          <WelcomePage onEnter={handleEnter} />
+        )}
+      </AnimatePresence>
+
+      {/* 3. Top Persistent Unified Navbar (Hidden on Welcome Page) */}
       {hasEnteredWelcome && (
         <Navbar
           appMode={appMode}
@@ -89,10 +150,12 @@ export default function Home() {
           >
             {/* ================= 模式 1：第一次坐飞机 (Flagship MVP) ================= */}
             {appMode === "flight" && (
-              <div className="relative w-full h-screen">
-                <FirstFlightExperienceScene />
-                <FirstFlightOverlay onSwitchToGuides={() => setAppMode("guides")} />
-                <FlightReflectionCard onSwitchToGuides={() => setAppMode("guides")} />
+              <div className="relative w-full h-screen pointer-events-none">
+                {/* 3D Scene is in fixed background, Overlay is interactive */}
+                <div className="pointer-events-auto">
+                  <FirstFlightOverlay onSwitchToGuides={() => setAppMode("guides")} />
+                  <FlightReflectionCard onSwitchToGuides={() => setAppMode("guides")} />
+                </div>
               </div>
             )}
 
