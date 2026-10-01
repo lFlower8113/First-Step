@@ -151,6 +151,18 @@ export const Navbar: React.FC<NavbarProps> = ({ appMode = "flight", onModeChange
             </div>
           )}
 
+          {/* PPT Presentation Button */}
+          <a
+            href="/presentation.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="打开项目汇报演示文稿 (PPT)"
+            className="px-2.5 sm:px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 hover:bg-sky-500/25 text-xs font-medium text-sky-300 flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(56,189,248,0.2)] group"
+          >
+            <Presentation className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">演示汇报 (PPT)</span>
+          </a>
+
           {/* Sound Mute Toggle */}
           <button
             onClick={toggleSound}

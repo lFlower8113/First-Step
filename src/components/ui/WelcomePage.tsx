@@ -137,6 +137,14 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
           className="relative z-10 flex items-center justify-between w-full text-[11px] font-mono text-neutral-500/80 tracking-wider"
         >
           <span>SPATIAL COGNITIVE MATRIX</span>
+          <a
+            href="/presentation.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-sky-300 transition-colors flex items-center gap-1.5 cursor-pointer text-neutral-400 border border-white/10 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md"
+          >
+            <span>📽️ 项目演示文稿 (PPT)</span>
+          </a>
           <span className="hidden sm:inline">2026 EDITION</span>
         </motion.div>
       </motion.div>

@@ -29,6 +29,7 @@ yarn-error.log*
 
 # Vercel & Cloudflare
 .cloudflare
+.wrangler
 
 # TypeScript
 *.tsbuildinfo
