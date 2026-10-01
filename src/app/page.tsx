@@ -1,0 +1,147 @@
+"use client";
+
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
+import { Navbar, AppExperienceMode } from "@/components/ui/Navbar";
+import { WelcomePage } from "@/components/ui/WelcomePage";
+import { FirstFlightOverlay } from "@/components/ui/FirstFlightOverlay";
+import { FlightReflectionCard } from "@/components/ui/FlightReflectionCard";
+import { FoggyOverlay } from "@/components/ui/FoggyOverlay";
+import { CourageCard } from "@/components/ui/CourageCard";
+import { Hero } from "@/components/ui/Hero";
+import { GuideDrawer } from "@/components/ui/GuideDrawer";
+import { useAppStore } from "@/lib/store";
+import { soundManager } from "@/lib/sound";
+
+// 1. 旗舰 MVP：第一次坐飞机伴随式互动模拟
+const FirstFlightExperienceScene = dynamic(
+  () =>
+    import("@/components/3d/FirstFlightExperienceScene").then(
+      (mod) => mod.FirstFlightExperienceScene
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
+        <div className="w-10 h-10 rounded-full border-2 border-sky-400 border-t-transparent animate-spin" />
+        <p className="text-xs tracking-wider text-sky-300 font-medium">
+          正在加载航站楼三维场景...
+        </p>
+      </div>
+    ),
+  }
+);
+
+// 2. 实景空间向导三维漫游 (星巴克、三甲医院、机场)
+const SceneViewer3D = dynamic(
+  () => import("@/components/3d/SceneViewer3D").then((mod) => mod.SceneViewer3D),
+  { ssr: false }
+);
+
+// 3. 雾中之门哲思模拟
+const FoggyDoorScene = dynamic(
+  () => import("@/components/3d/FoggyDoorScene").then((mod) => mod.FoggyDoorScene),
+  { ssr: false }
+);
+
+export default function Home() {
+  // General Welcome Page Landing State
+  const [hasEnteredWelcome, setHasEnteredWelcome] = useState<boolean>(false);
+
+  // App experience mode: 'flight' | 'guides' | 'fog'
+  const [appMode, setAppMode] = useState<AppExperienceMode>("flight");
+  const { viewMode } = useAppStore();
+
+  return (
+    <main className="relative min-h-screen bg-black overflow-hidden select-none">
+      {/* 1. 总欢迎页 (Landing Page with "迈出第一步") */}
+      <AnimatePresence>
+        {!hasEnteredWelcome && (
+          <WelcomePage
+            onEnter={() => {
+              setHasEnteredWelcome(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2. Top Persistent Unified Navbar (Hidden on Welcome Page) */}
+      {hasEnteredWelcome && (
+        <Navbar
+          appMode={appMode}
+          onModeChange={(newMode) => {
+            setAppMode(newMode);
+          }}
+        />
+      )}
+
+      {/* Dynamic Animated Scene Transition (Cross-Fade + Soft Optical Blur) */}
+      {hasEnteredWelcome && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={appMode}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="relative w-full h-full min-h-screen"
+          >
+            {/* ================= 模式 1：第一次坐飞机 (Flagship MVP) ================= */}
+            {appMode === "flight" && (
+              <div className="relative w-full h-screen">
+                <FirstFlightExperienceScene />
+                <FirstFlightOverlay onSwitchToGuides={() => setAppMode("guides")} />
+                <FlightReflectionCard onSwitchToGuides={() => setAppMode("guides")} />
+              </div>
+            )}
+
+            {/* ================= 模式 2：公共空间实景向导 (星巴克、三甲医院、机场) ================= */}
+            {appMode === "guides" && (
+              <div className="relative w-full min-h-screen">
+                <AnimatePresence mode="wait">
+                  {viewMode === "hall" ? (
+                    <motion.div
+                      key="guides-hall"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.02 }}
+                      transition={{ duration: 0.35 }}
+                      className="relative w-full min-h-screen"
+                    >
+                      <Hero />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="guides-3d"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.02 }}
+                      transition={{ duration: 0.35 }}
+                      className="relative w-full h-screen"
+                    >
+                      <SceneViewer3D />
+                      <GuideDrawer />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* ================= 模式 3：雾中之门 (哲思空间) ================= */}
+            {appMode === "fog" && (
+              <div className="relative w-full h-screen">
+                <FoggyDoorScene />
+                <FoggyOverlay appMode={appMode} onModeChange={setAppMode} />
+                <CourageCard
+                  onStartFlight={() => setAppMode("flight")}
+                  onExploreGuides={() => setAppMode("guides")}
+                />
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      )}
+    </main>
+  );
+}
