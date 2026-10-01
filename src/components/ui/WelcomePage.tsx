@@ -47,19 +47,34 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,7,12,0.85)_80%)]" />
         </div>
 
-        {/* Minimal Top Brand Anchor */}
+        {/* Top Brand & PPT Launch Bar */}
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-10 flex items-center gap-2.5 text-neutral-400"
+          className="relative z-20 flex items-center justify-between w-full max-w-6xl mx-auto"
         >
-          <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-            <Compass className="w-3.5 h-3.5 text-neutral-300" />
+          <div className="flex items-center gap-2.5 text-neutral-400">
+            <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+              <Compass className="w-4 h-4 text-sky-400" />
+            </div>
+            <span className="text-xs tracking-[0.28em] uppercase font-light text-neutral-300">
+              FIRST STEP · 第一次
+            </span>
           </div>
-          <span className="text-xs tracking-[0.28em] uppercase font-light text-neutral-400">
-            FIRST STEP · 第一次
-          </span>
+
+          {/* Prominent Glowing PPT Link */}
+          <a
+            href="/presentation.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="新标签页全屏放映项目汇报 PPT"
+            className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 hover:border-amber-400/80 text-xs font-semibold text-amber-300 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 backdrop-blur-xl group"
+          >
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            <span>📽️ 项目演示文稿 (PPT)</span>
+            <ArrowRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition-transform" />
+          </a>
         </motion.div>
 
         {/* Center: Poetic, Pure Typography & Interactive "迈出第一步" */}
@@ -84,48 +99,64 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
             </p>
           </motion.div>
 
-          {/* Central Interactive Artifact CTA Button: "迈出第一步" */}
+          {/* Central Interactive Artifact CTA Buttons: "迈出第一步" & "答辩演示 PPT" */}
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.55 }}
-            className="relative flex items-center justify-center pt-2"
+            className="relative flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
           >
-            {/* Outer Subtle Breathing Halo Ring */}
-            <motion.div
-              animate={{
-                scale: isHovered ? [1.1, 1.25, 1.1] : [1, 1.18, 1],
-                opacity: isHovered ? [0.4, 0.7, 0.4] : [0.15, 0.35, 0.15],
-              }}
-              transition={{
-                duration: isHovered ? 2.0 : 3.6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute w-44 h-14 rounded-full bg-sky-400/30 blur-xl pointer-events-none"
-            />
+            {/* Primary Action Button: 迈出第一步 */}
+            <div className="relative flex items-center justify-center">
+              {/* Outer Subtle Breathing Halo Ring */}
+              <motion.div
+                animate={{
+                  scale: isHovered ? [1.1, 1.25, 1.1] : [1, 1.18, 1],
+                  opacity: isHovered ? [0.4, 0.7, 0.4] : [0.15, 0.35, 0.15],
+                }}
+                transition={{
+                  duration: isHovered ? 2.0 : 3.6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute w-44 h-14 rounded-full bg-sky-400/30 blur-xl pointer-events-none"
+              />
 
-            <button
-              onClick={handleClick}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="group relative px-9 py-4 rounded-full bg-white/[0.07] hover:bg-white/[0.14] active:scale-95 border border-white/20 hover:border-white/40 backdrop-blur-2xl transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex items-center gap-3 cursor-pointer"
+              <button
+                onClick={handleClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="group relative px-9 py-4 rounded-full bg-white/[0.07] hover:bg-white/[0.14] active:scale-95 border border-white/20 hover:border-white/40 backdrop-blur-2xl transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex items-center gap-3 cursor-pointer"
+              >
+                {/* Subtle inner linear highlight */}
+                <div className="absolute inset-x-4 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+
+                {/* Glowing Pulse Dot */}
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+                </span>
+
+                <span className="text-sm sm:text-base font-light tracking-[0.2em] text-white">
+                  迈出第一步
+                </span>
+
+                <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300" />
+              </button>
+            </div>
+
+            {/* Prominent Secondary Action Button: 项目汇报 PPT */}
+            <a
+              href="/presentation.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-7 py-4 rounded-full bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 border border-amber-400/35 hover:border-amber-400/70 backdrop-blur-2xl text-amber-300 transition-all duration-300 shadow-[0_4px_24px_rgba(245,158,11,0.2)] flex items-center gap-2.5 cursor-pointer group"
             >
-              {/* Subtle inner linear highlight */}
-              <div className="absolute inset-x-4 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-
-              {/* Glowing Pulse Dot */}
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+              <span className="text-sm sm:text-base font-light tracking-[0.12em]">
+                📽️ 答辩演示 (PPT)
               </span>
-
-              <span className="text-sm sm:text-base font-light tracking-[0.2em] text-white">
-                迈出第一步
-              </span>
-
-              <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300" />
-            </button>
+              <ArrowRight className="w-4 h-4 text-amber-300 group-hover:translate-x-1 transition-transform" />
+            </a>
           </motion.div>
         </div>
 

@@ -139,8 +139,31 @@ export default function Home() {
                 />
               </div>
             )}
+
+            {/* ================= 模式 4：项目答辩演示 (PPT) ================= */}
+            {appMode === "deck" && (
+              <div className="relative w-full h-screen">
+                <iframe
+                  src="/presentation.html"
+                  className="w-full h-full border-none"
+                  title="FirstStep 项目答辩汇报 PPT"
+                />
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
+      )}
+
+      {/* Floating Bottom-Right PPT Launcher Pill (Always Available) */}
+      {hasEnteredWelcome && appMode !== "deck" && (
+        <button
+          onClick={() => setAppMode("deck")}
+          title="切换至项目汇报演示 (PPT)"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/85 hover:bg-black text-amber-300 border border-amber-400/50 hover:border-amber-400 shadow-[0_4px_24px_rgba(245,158,11,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+        >
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+          <span className="text-xs font-semibold tracking-wide">📽️ 项目答辩 (PPT)</span>
+        </button>
       )}
     </main>
   );

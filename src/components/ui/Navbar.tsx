@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { soundManager } from "@/lib/sound";
 
-export type AppExperienceMode = "flight" | "guides" | "fog";
+export type AppExperienceMode = "flight" | "guides" | "fog" | "deck";
 
 interface NavbarProps {
   appMode?: AppExperienceMode;
@@ -49,6 +49,13 @@ const MODES: {
     icon: <Sparkles className="w-3.5 h-3.5" />,
     activeBg: "bg-purple-600",
     activeGlow: "shadow-[0_0_16px_rgba(168,85,247,0.6)]",
+  },
+  {
+    id: "deck",
+    label: "项目演示 (PPT)",
+    icon: <Presentation className="w-3.5 h-3.5" />,
+    activeBg: "bg-amber-500",
+    activeGlow: "shadow-[0_0_16px_rgba(245,158,11,0.6)]",
   },
 ];
 
@@ -156,11 +163,11 @@ export const Navbar: React.FC<NavbarProps> = ({ appMode = "flight", onModeChange
             href="/presentation.html"
             target="_blank"
             rel="noopener noreferrer"
-            title="打开项目汇报演示文稿 (PPT)"
-            className="px-2.5 sm:px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 hover:bg-sky-500/25 text-xs font-medium text-sky-300 flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(56,189,248,0.2)] group"
+            title="新标签页全屏放映 PPT"
+            className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-sky-500/20 border border-amber-400/40 hover:border-amber-400/80 text-xs font-medium text-amber-300 flex items-center gap-1.5 transition-all shadow-[0_0_14px_rgba(245,158,11,0.25)] hover:scale-105 group"
           >
-            <Presentation className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
-            <span className="hidden sm:inline">演示汇报 (PPT)</span>
+            <Presentation className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
+            <span>PPT 演示</span>
           </a>
 
           {/* Sound Mute Toggle */}
